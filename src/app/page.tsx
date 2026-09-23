@@ -1,6 +1,6 @@
 import { Cursor, SmoothScroll } from "@/components/effects";
 import { Contact } from "@/components/sections/Contact";
-import { CurrentRole } from "@/components/sections/CurrentRole";
+import { LastRole } from "@/components/sections/LastRole";
 import { Experience } from "@/components/sections/Experience";
 import { Hero } from "@/components/sections/Hero";
 import { Nav } from "@/components/sections/Nav";
@@ -15,7 +15,7 @@ export default function Home() {
       <Nav />
       <main className="relative z-10">
         <Hero />
-        <CurrentRole />
+        <LastRole />
         <Projects />
         <Experience />
         <Stack />

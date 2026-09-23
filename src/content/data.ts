@@ -7,6 +7,7 @@ export const profile = {
   email: "renan.gabba@gmail.com",
   linkedin: "https://www.linkedin.com/in/renan-augusto-santos/",
   github: "https://github.com/renanfrontend",
+  status: "Disponível para novos desafios",
   avatar: "https://avatars.githubusercontent.com/u/146970438?v=4",
   summary:
     "Senior Frontend Engineer com mais de 6 anos construindo aplicações web modernas, escaláveis e de alta performance no ecossistema React, TypeScript e Next.js. Integro Inteligência Artificial ao ciclo de desenvolvimento — Claude Code, Gemini, Copilot e Prompt Engineering — para acelerar entregas e elevar a qualidade do produto, com base sólida em arquitetura, UI/UX, Cloud e CI/CD.",
@@ -19,13 +20,13 @@ export const stats = [
   { value: 70, suffix: "+", label: "certificações" },
 ];
 
-export const currentRole = {
+export const lastRole = {
   company: "MWM Motores e Geradores",
   title: "Senior Frontend Engineer",
-  period: "set/2025 — atual",
+  period: "set/2025 — 2026",
   mode: "São Paulo · Híbrido",
   intro:
-    "Lidero a construção de interfaces para sistemas corporativos e logísticos — do componente à infraestrutura em nuvem.",
+    "Liderei a construção de interfaces para sistemas corporativos e logísticos — do componente à infraestrutura em nuvem.",
   highlights: [
     {
       code: "01",

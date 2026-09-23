@@ -3,7 +3,7 @@
 import { motion, useInView, useScroll, useTransform } from "motion/react";
 import dynamic from "next/dynamic";
 import { useRef } from "react";
-import { currentRole, profile, stats } from "@/content/data";
+import { profile, stats } from "@/content/data";
 import { Counter, Magnetic, Scramble } from "../effects";
 import { Arrow } from "../ui";
 
@@ -41,14 +41,17 @@ export function Hero() {
 
       <motion.div style={{ y: textY }} className="relative z-10 mx-auto w-full max-w-7xl px-4 md:px-8">
         <motion.a
-          href="#mwm"
+          href="#contato"
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease }}
-          className="mb-8 inline-flex items-center gap-3 rounded-full border border-cyan/30 bg-cyan/5 py-1.5 pl-2 pr-4 font-mono text-xs text-cyan backdrop-blur"
+          className="mb-8 inline-flex items-center gap-3 rounded-full border border-emerald-400/30 bg-emerald-400/5 py-1.5 pl-2 pr-4 font-mono text-xs text-emerald-300 backdrop-blur"
         >
-          <span className="rounded-full bg-cyan px-2 py-0.5 text-[10px] font-bold text-ink">AGORA</span>
-          {currentRole.title} @ MWM
+          <span className="relative flex h-2 w-2">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+            <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
+          </span>
+          {profile.status}
           <Arrow />
         </motion.a>
 

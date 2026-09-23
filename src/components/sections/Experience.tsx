@@ -1,4 +1,4 @@
-import { currentRole, education, experience } from "@/content/data";
+import { education, experience, lastRole } from "@/content/data";
 import { Reveal } from "../effects";
 import { SectionHeader, Tag } from "../ui";
 
@@ -20,9 +20,9 @@ export function Experience() {
           <li className="relative pb-12 pl-8 md:pl-12">
             <span className="absolute -left-[7px] top-1.5 h-3.5 w-3.5 rounded-full bg-cyan shadow-[0_0_20px_4px_rgba(34,211,238,.6)]" />
             <Reveal>
-              <p className="font-mono text-xs text-cyan">{currentRole.period}</p>
+              <p className="font-mono text-xs text-cyan">{lastRole.period}</p>
               <h3 className="mt-2 text-2xl font-semibold">
-                {currentRole.title} <span className="text-muted">· MWM</span>
+                {lastRole.title} <span className="text-muted">· MWM</span>
               </h3>
               <a href="#mwm" className="mt-2 inline-block font-mono text-xs text-muted underline decoration-cyan/40 underline-offset-4 hover:text-white">
                 ver detalhes acima ↑
