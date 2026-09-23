@@ -1,7 +1,7 @@
 import { Cursor, SmoothScroll } from "@/components/effects";
+import { About } from "@/components/sections/About";
+import { Career } from "@/components/sections/Career";
 import { Contact } from "@/components/sections/Contact";
-import { LastRole } from "@/components/sections/LastRole";
-import { Experience } from "@/components/sections/Experience";
 import { Hero } from "@/components/sections/Hero";
 import { Nav } from "@/components/sections/Nav";
 import { Projects } from "@/components/sections/Projects";
@@ -15,9 +15,9 @@ export default function Home() {
       <Nav />
       <main className="relative z-10">
         <Hero />
-        <LastRole />
+        <About />
+        <Career />
         <Projects />
-        <Experience />
         <Stack />
         <Contact />
       </main>

@@ -4,118 +4,122 @@ export const profile = {
   role: "Senior Frontend Engineer",
   tagline: "React · TypeScript · Next.js · IA aplicada ao desenvolvimento",
   location: "São Paulo, Brasil",
+  workModes: "Remoto · Híbrido",
   email: "renan.gabba@gmail.com",
   linkedin: "https://www.linkedin.com/in/renan-augusto-santos/",
   github: "https://github.com/renanfrontend",
+  cv: "/curriculo-renan-augusto.pdf",
   status: "Disponível para novos desafios",
-  avatar: "https://avatars.githubusercontent.com/u/146970438?v=4",
+  pitch:
+    "Senior Frontend Engineer com 6+ anos entregando produtos web em React, Next.js e TypeScript — de dashboards corporativos a experiências 3D. Uso IA no dia a dia de engenharia para entregar mais rápido, com qualidade.",
   summary:
     "Senior Frontend Engineer com mais de 6 anos construindo aplicações web modernas, escaláveis e de alta performance no ecossistema React, TypeScript e Next.js. Integro Inteligência Artificial ao ciclo de desenvolvimento — Claude Code, Gemini, Copilot e Prompt Engineering — para acelerar entregas e elevar a qualidade do produto, com base sólida em arquitetura, UI/UX, Cloud e CI/CD.",
 };
 
 export const stats = [
   { value: 6, suffix: "+", label: "anos em frontend" },
-  { value: 5, suffix: "", label: "empresas" },
   { value: 60, suffix: "+", label: "repositórios públicos" },
   { value: 70, suffix: "+", label: "certificações" },
 ];
 
-export const lastRole = {
-  company: "MWM Motores e Geradores",
-  title: "Senior Frontend Engineer",
-  period: "set/2025 — 2026",
-  mode: "São Paulo · Híbrido",
-  intro:
-    "Liderei a construção de interfaces para sistemas corporativos e logísticos — do componente à infraestrutura em nuvem.",
-  highlights: [
-    {
-      code: "01",
-      title: "SPAs & PWAs corporativas",
-      text: "Interfaces escaláveis com React, TypeScript e Vite para o MWM Portal e o Bio Plantas.",
-    },
-    {
-      code: "02",
-      title: "Dashboards de logística e qualidade",
-      text: "Visualização de dados com Google Charts otimizando gestão de portaria, cooperados e análise operacional.",
-    },
-    {
-      code: "03",
-      title: "Modernização de UI/UX",
-      text: "Migração de interfaces legadas para Tailwind CSS e Shadcn/UI, com foco em responsividade e acessibilidade.",
-    },
-    {
-      code: "04",
-      title: "Cloud & DevOps no Azure",
-      text: "Orquestração com Docker, Azure Container Apps e ACR; CI/CD automatizado no Azure DevOps.",
-    },
-    {
-      code: "05",
-      title: "Integração full-stack",
-      text: "Consumo de APIs REST em Java Spring Boot e configuração de servidores Nginx.",
-    },
-  ],
-  stack: [
-    "React",
-    "TypeScript",
-    "Vite",
-    "Tailwind CSS",
-    "Shadcn/UI",
-    "Google Charts",
-    "Docker",
-    "Azure Container Apps",
-    "Azure DevOps",
-    "Spring Boot",
-    "Nginx",
-  ],
+/** Diferenciais que um recrutador precisa enxergar em segundos. */
+export const strengths = [
+  { title: "Sênior de ponta a ponta", text: "Da definição de stack e arquitetura ao deploy em nuvem — já atuei como único frontend de um produto." },
+  { title: "IA no fluxo de engenharia", text: "Claude Code, Gemini e Copilot no dia a dia; pós-graduação em IA e Ciência de Dados em andamento." },
+  { title: "Produto e UX", text: "Interfaces acessíveis e responsivas, modernização de legado e dashboards orientados a dados." },
+];
+
+export type Level = "Sênior" | "Pleno" | "Analista";
+
+export type Role = {
+  id: string;
+  company: string;
+  title: string;
+  level: Level;
+  period: string;
+  place: string;
+  summary: string;
+  points: string[];
+  stack: string[];
 };
 
-export const experience = [
+export const experience: Role[] = [
   {
+    id: "mwm",
+    company: "MWM Motores e Geradores",
+    title: "Senior Frontend Engineer",
+    level: "Sênior",
+    period: "set/2025 — 2026",
+    place: "São Paulo · Híbrido",
+    summary: "Frontend de sistemas corporativos e logísticos, do componente à infraestrutura no Azure.",
+    points: [
+      "Construí SPAs e PWAs em React, TypeScript e Vite para o MWM Portal e o Bio Plantas.",
+      "Entreguei dashboards de logística e qualidade (Google Charts) que centralizaram a gestão de portaria, cooperados e dados operacionais.",
+      "Modernizei interfaces legadas para Tailwind CSS e Shadcn/UI, elevando responsividade e acessibilidade.",
+      "Automatizei build e deploy com Docker, Azure Container Apps, ACR e pipelines no Azure DevOps.",
+      "Integrei o frontend a APIs REST em Java Spring Boot e configurei servidores Nginx.",
+    ],
+    stack: ["React", "TypeScript", "Vite", "Tailwind", "Shadcn/UI", "Docker", "Azure", "Spring Boot"],
+  },
+  {
+    id: "portal-telemedicina",
     company: "Portal Telemedicina",
     title: "Frontend Engineer Sênior",
+    level: "Sênior",
     period: "out/2024 — jan/2025",
     place: "Barueri, SP · Remoto",
+    summary: "Interfaces para uma plataforma de telemedicina em Angular.",
     points: [
-      "Interfaces responsivas e acessíveis com Angular, TypeScript, HTML e CSS.",
-      "Princípios de UI/UX para experiências intuitivas e testes para garantir robustez.",
-      "Integração com APIs e serviços, com pipelines em GitHub Actions.",
+      "Desenvolvi interfaces responsivas e acessíveis com Angular e TypeScript.",
+      "Traduzi layouts em código limpo, aplicando princípios de UI/UX e testes para garantir robustez.",
+      "Integrei APIs e serviços com entrega contínua via GitHub Actions.",
     ],
     stack: ["Angular", "TypeScript", "GitHub Actions"],
   },
   {
+    id: "olos",
     company: "Olos Tecnologia",
     title: "Frontend Engineer Pleno",
+    level: "Pleno",
     period: "out/2023 — jun/2024",
     place: "São Paulo, SP",
+    summary: "Produtos web em React e Next.js com foco em UI/UX.",
     points: [
-      "Interfaces com React, TypeScript, Next.js, Styled Components e Material UI.",
-      "Layouts responsivos e boas práticas de UI/UX.",
-      "Gestão de pipelines CI/CD com GitHub Actions.",
+      "Desenvolvi interfaces com React, Next.js, TypeScript, Styled Components e Material UI.",
+      "Implementei layouts responsivos seguindo boas práticas de UI/UX.",
+      "Mantive pipelines de CI/CD no GitHub Actions para entregas contínuas e seguras.",
     ],
-    stack: ["React", "Next.js", "Material UI"],
+    stack: ["React", "Next.js", "TypeScript", "Material UI"],
   },
   {
+    id: "safira",
     company: "SAFIRA Soluções & Tecnologia",
     title: "Frontend Engineer Pleno",
+    level: "Pleno",
     period: "mar/2022 — set/2023",
     place: "São Paulo · Híbrido",
+    summary: "Único desenvolvedor frontend do produto — dono da stack e da arquitetura.",
     points: [
-      "Único desenvolvedor frontend: defini a stack e a arquitetura de ponta a ponta.",
-      "Componentes reutilizáveis em React/TypeScript, autenticação JWT e APIs RESTful.",
-      "Decisões técnicas de performance e segurança; mentoria de desenvolvedores juniores.",
+      "Defini a stack e estruturei a arquitetura frontend de ponta a ponta.",
+      "Criei biblioteca de componentes reutilizáveis em React/TypeScript, autenticação JWT e integrações REST.",
+      "Tomei decisões técnicas de performance, escalabilidade e segurança e mentorei desenvolvedores juniores.",
+      "Atuei com cloud AWS/Azure e esteiras de CI/CD.",
     ],
-    stack: ["React", "TypeScript", "AWS", "Azure"],
+    stack: ["React", "TypeScript", "JWT", "AWS", "Azure"],
   },
   {
+    id: "clude",
     company: "Clude — Cartão de Saúde 360°",
     title: "Analista Desenvolvedor Frontend",
+    level: "Analista",
     period: "fev/2020 — mar/2022",
     place: "São Paulo, SP",
+    summary: "Onde comecei: aplicações web de saúde em React.",
     points: [
-      "Aplicações web responsivas com React.js, JavaScript, Sass e Bootstrap.",
-      "Soluções focadas em usabilidade e experiência do usuário.",
+      "Desenvolvi aplicações web responsivas com React.js, JavaScript, Sass e Bootstrap.",
+      "Entreguei soluções focadas em usabilidade e experiência do usuário.",
     ],
-    stack: ["React", "JavaScript", "Sass"],
+    stack: ["React", "JavaScript", "Sass", "Bootstrap"],
   },
 ];
 

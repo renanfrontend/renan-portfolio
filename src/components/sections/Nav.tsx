@@ -4,9 +4,9 @@ import { motion, useScroll, useSpring } from "motion/react";
 import { useEffect, useState } from "react";
 
 const links = [
-  { href: "#mwm", label: "MWM", n: "01" },
-  { href: "#projetos", label: "Projetos", n: "02" },
-  { href: "#trajetoria", label: "Trajetória", n: "03" },
+  { href: "#sobre", label: "Resumo", n: "01" },
+  { href: "#experiencia", label: "Experiência", n: "02" },
+  { href: "#projetos", label: "Projetos", n: "03" },
   { href: "#stack", label: "Stack", n: "04" },
   { href: "#contato", label: "Contato", n: "05" },
 ];

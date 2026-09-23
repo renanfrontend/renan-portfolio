@@ -3,9 +3,9 @@
 import { motion, useInView, useScroll, useTransform } from "motion/react";
 import dynamic from "next/dynamic";
 import { useRef } from "react";
-import { profile, stats } from "@/content/data";
-import { Counter, Magnetic, Scramble } from "../effects";
-import { Arrow } from "../ui";
+import { profile } from "@/content/data";
+import { Magnetic, Scramble } from "../effects";
+import { Arrow, Icons } from "../ui";
 
 const HeroScene = dynamic(() => import("../three/HeroScene"), { ssr: false });
 
@@ -69,9 +69,12 @@ export function Hero() {
             <span className="text-muted">&gt;_</span> {profile.role}
           </p>
           <p className="mt-4 text-lg leading-relaxed text-slate-300 md:text-xl">
-            Construo interfaces de alta performance com <span className="text-white">React</span>,{" "}
-            <span className="text-white">Next.js</span> e <span className="text-white">TypeScript</span> — e uso IA para
-            entregar mais rápido e melhor.
+            <span className="text-white">6+ anos</span> entregando produtos web com <span className="text-white">React</span>,{" "}
+            <span className="text-white">Next.js</span> e <span className="text-white">TypeScript</span> — e usando IA para
+            entregar mais rápido, com qualidade.
+          </p>
+          <p className="mt-4 font-mono text-xs uppercase tracking-wider text-muted">
+            {profile.location} <span className="text-cyan">/</span> {profile.workModes}
           </p>
         </motion.div>
 
@@ -83,40 +86,44 @@ export function Hero() {
         >
           <Magnetic>
             <a
-              href="#projetos"
+              href={profile.cv}
+              download
               className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full bg-white px-7 py-4 font-medium text-ink"
             >
               <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-cyan to-violet transition-transform duration-500 group-hover:translate-x-0" />
-              <span className="relative">Ver projetos</span>
-              <Arrow className="relative transition group-hover:rotate-45" />
+              <span className="relative">Baixar currículo</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="relative h-4 w-4 transition group-hover:translate-y-0.5" aria-hidden>
+                <path d="M12 4v12m0 0-5-5m5 5 5-5M5 20h14" />
+              </svg>
             </a>
           </Magnetic>
           <Magnetic>
-            <a href="#contato" className="inline-flex items-center gap-2 rounded-full border border-line px-7 py-4 text-slate-200 backdrop-blur transition hover:border-cyan/60 hover:text-white">
-              Vamos conversar
+            <a href="#experiencia" className="group inline-flex items-center gap-2 rounded-full border border-line px-7 py-4 text-slate-200 backdrop-blur transition hover:border-cyan/60 hover:text-white">
+              Ver experiência <Arrow className="transition group-hover:rotate-45" />
             </a>
           </Magnetic>
+          <div className="flex items-center gap-2">
+            {[
+              { href: profile.linkedin, label: "LinkedIn", icon: Icons.linkedin },
+              { href: profile.github, label: "GitHub", icon: Icons.github },
+            ].map((s) => (
+              <a
+                key={s.label}
+                href={s.href}
+                target="_blank"
+                rel="noreferrer"
+                aria-label={s.label}
+                className="grid h-12 w-12 place-items-center rounded-full border border-line text-slate-300 backdrop-blur transition hover:border-cyan/60 hover:text-cyan"
+              >
+                {s.icon}
+              </a>
+            ))}
+          </div>
         </motion.div>
 
-        <motion.dl
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 1.1 }}
-          className="mt-16 grid max-w-2xl grid-cols-2 gap-6 border-t border-line pt-8 sm:grid-cols-4"
-        >
-          {stats.map((s) => (
-            <div key={s.label}>
-              <dt className="sr-only">{s.label}</dt>
-              <dd className="text-3xl font-semibold tabular-nums md:text-4xl">
-                <Counter to={s.value} suffix={s.suffix} />
-              </dd>
-              <p className="mt-1 font-mono text-[11px] uppercase tracking-wider text-muted">{s.label}</p>
-            </div>
-          ))}
-        </motion.dl>
       </motion.div>
 
-      <a href="#mwm" className="absolute bottom-12 right-12 z-10 hidden flex-col items-center gap-2 font-mono text-[10px] tracking-[0.3em] text-muted md:flex">
+      <a href="#sobre" className="absolute bottom-12 right-12 z-10 hidden flex-col items-center gap-2 font-mono text-[10px] tracking-[0.3em] text-muted md:flex">
         SCROLL
         <span className="relative h-10 w-px overflow-hidden bg-line">
           <motion.span className="absolute inset-x-0 top-0 h-4 bg-cyan" animate={{ y: [-16, 40] }} transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }} />

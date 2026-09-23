@@ -30,13 +30,22 @@ export function Contact() {
             Aberto a novos desafios, projetos e boas conversas sobre frontend, 3D na web e IA aplicada.
           </p>
         </Reveal>
-        <Reveal delay={0.3} className="mt-12 flex justify-center">
+        <Reveal delay={0.3} className="mt-12 flex flex-wrap items-center justify-center gap-4">
           <Magnetic>
             <a
               href={`mailto:${profile.email}`}
               className="group relative inline-flex items-center gap-3 overflow-hidden rounded-full bg-gradient-to-r from-cyan to-violet px-10 py-5 text-lg font-medium text-ink shadow-[0_0_60px_-10px_rgba(34,211,238,.7)]"
             >
               Enviar mensagem <Arrow className="h-5 w-5 transition group-hover:rotate-45" />
+            </a>
+          </Magnetic>
+          <Magnetic>
+            <a
+              href={profile.cv}
+              download
+              className="inline-flex items-center gap-2 rounded-full border border-line px-8 py-5 text-lg text-slate-200 backdrop-blur transition hover:border-cyan/60 hover:text-white"
+            >
+              Baixar currículo (PDF)
             </a>
           </Magnetic>
         </Reveal>

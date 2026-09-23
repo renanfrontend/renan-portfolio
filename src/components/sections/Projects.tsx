@@ -51,7 +51,7 @@ export function Projects() {
     <section id="projetos" className="relative mx-auto max-w-7xl px-4 py-28 md:px-8 md:py-40">
       <div className="pointer-events-none absolute -right-40 top-40 h-[500px] w-[500px] rounded-full bg-violet/10 blur-[140px]" aria-hidden />
       <SectionHeader
-        index="02"
+        index="03"
         label="Projetos em destaque"
         title={
           <>
