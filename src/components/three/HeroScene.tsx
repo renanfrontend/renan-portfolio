@@ -1,6 +1,8 @@
 "use client";
 
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { Bloom, ChromaticAberration, EffectComposer, Vignette } from "@react-three/postprocessing";
+import type { MotionValue } from "motion/react";
 import { useRef } from "react";
 import * as THREE from "three";
 
@@ -32,6 +34,7 @@ float snoise(vec3 v){
 const coreVertex = /* glsl */ `
 uniform float uTime;
 uniform float uPulse;
+uniform float uScroll;
 varying vec3 vNormal;
 varying vec3 vView;
 varying float vDisp;
@@ -39,7 +42,7 @@ ${noise}
 void main(){
   float n = snoise(normal * 1.6 + uTime * 0.35);
   float n2 = snoise(normal * 4.0 - uTime * 0.6) * 0.25;
-  float d = (n + n2) * (0.22 + uPulse * 0.25);
+  float d = (n + n2) * (0.22 + uPulse * 0.25 + uScroll * 0.9);
   vDisp = d;
   vec3 pos = position + normal * d;
   vec4 mv = modelViewMatrix * vec4(pos, 1.0);
@@ -67,16 +70,20 @@ void main(){
 const coreUniforms = {
   uTime: { value: 0 },
   uPulse: { value: 0 },
+  uScroll: { value: 0 },
   uColorA: { value: new THREE.Color("#22d3ee") },
   uColorB: { value: new THREE.Color("#8b5cf6") },
 };
 
-function Core() {
+function Core({ progress }: { progress?: MotionValue<number> }) {
   const mesh = useRef<THREE.Mesh>(null);
   const wire = useRef<THREE.Mesh>(null);
 
   useFrame((state, delta) => {
     coreUniforms.uTime.value += delta;
+    const scroll = progress?.get() ?? 0;
+    coreUniforms.uScroll.value += (scroll - coreUniforms.uScroll.value) * 0.1;
+    particleUniforms.uScroll.value = coreUniforms.uScroll.value;
     const { x, y } = state.pointer;
     const target = Math.min(1, Math.hypot(x, y));
     coreUniforms.uPulse.value += (target - coreUniforms.uPulse.value) * 0.04;
@@ -134,11 +141,12 @@ function Rings() {
 const particleVertex = /* glsl */ `
 uniform float uTime;
 uniform vec2 uPointer;
+uniform float uScroll;
 attribute float aScale;
 attribute float aSpeed;
 varying float vAlpha;
 void main(){
-  vec3 p = position;
+  vec3 p = position * (1.0 + uScroll * 1.4);
   float a = uTime * aSpeed * 0.15;
   float s = sin(a), c = cos(a);
   p.xz = mat2(c, -s, s, c) * p.xz;
@@ -160,7 +168,8 @@ void main(){
   gl_FragColor = vec4(mix(vec3(0.55,0.36,0.96), vec3(0.13,0.83,0.93), a), a * vAlpha * 0.9);
 }`;
 
-const particleUniforms = { uTime: { value: 0 }, uPointer: { value: new THREE.Vector2() } };
+const particleUniforms = { uTime: { value: 0 }, uScroll: { value: 0 }, uPointer: { value: new THREE.Vector2() } };
+const aberration = new THREE.Vector2(0.0009, 0.0012);
 
 function makeParticles(count: number) {
   const positions = new Float32Array(count * 3);
@@ -208,12 +217,15 @@ function Particles() {
   );
 }
 
-/** Desktop: núcleo à direita do texto. Mobile: centralizado e menor, atrás do texto. */
+/** Desktop: núcleo à direita do texto. Mobile: menor, no canto superior direito, longe do parágrafo. */
 function Anchor({ children }: { children: React.ReactNode }) {
   const { viewport } = useThree();
   const wide = viewport.aspect > 1.1;
   return (
-    <group position={[wide ? viewport.width * 0.2 : 0, wide ? 0 : 0.6, 0]} scale={wide ? 1 : 0.7}>
+    <group
+      position={wide ? [viewport.width * 0.2, 0, 0] : [viewport.width * 0.3, viewport.height * 0.26, -1]}
+      scale={wide ? 1 : 0.62}
+    >
       {children}
     </group>
   );
@@ -229,22 +241,28 @@ function Rig() {
   return null;
 }
 
-export default function HeroScene({ active = true }: { active?: boolean }) {
+export default function HeroScene({ active = true, progress }: { active?: boolean; progress?: MotionValue<number> }) {
   return (
     <Canvas
       frameloop={active ? "always" : "never"}
       dpr={[1, 1.75]}
       camera={{ position: [0, 0, 7], fov: 45 }}
-      gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
+      gl={{ antialias: false, powerPreference: "high-performance" }}
       eventSource={typeof document !== "undefined" ? document.body : undefined}
       eventPrefix="client"
     >
+      <color attach="background" args={["#05060a"]} />
       <Rig />
       <Anchor>
-        <Core />
+        <Core progress={progress} />
         <Rings />
       </Anchor>
       <Particles />
+      <EffectComposer multisampling={0}>
+        <Bloom mipmapBlur intensity={1.15} luminanceThreshold={0.12} luminanceSmoothing={0.35} />
+        <ChromaticAberration offset={aberration} radialModulation={false} modulationOffset={0} />
+        <Vignette eskil={false} offset={0.2} darkness={0.75} />
+      </EffectComposer>
     </Canvas>
   );
 }

@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { Reveal, Scramble } from "./effects";
+import { Reveal, Scramble, WipeReveal } from "./effects";
 
 export function SectionHeader({ index, label, title, children }: { index: string; label: string; title: ReactNode; children?: ReactNode }) {
   return (
@@ -11,9 +11,9 @@ export function SectionHeader({ index, label, title, children }: { index: string
           <Scramble text={label} />
         </p>
       </Reveal>
-      <Reveal delay={0.1}>
-        <h2 className="max-w-4xl text-4xl font-semibold leading-[1.05] tracking-tight md:text-6xl">{title}</h2>
-      </Reveal>
+      <WipeReveal delay={0.05}>
+        <h2 className="max-w-4xl text-4xl font-semibold leading-[1.05] tracking-tight md:text-7xl">{title}</h2>
+      </WipeReveal>
       {children && (
         <Reveal delay={0.2}>
           <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted">{children}</p>

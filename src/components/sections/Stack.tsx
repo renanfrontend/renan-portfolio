@@ -1,25 +1,42 @@
 import { skills } from "@/content/data";
-import { Reveal, TiltCard } from "../effects";
+import { Reveal, TiltCard, VelocityMarquee } from "../effects";
 import { SectionHeader } from "../ui";
 
-const marquee = ["React", "Next.js", "TypeScript", "three.js", "Tailwind", "Claude Code", "Gemini", "Docker", "Azure", "Vite", "Shadcn/UI", "GLSL"];
+const rows = [
+  ["React", "Next.js", "TypeScript", "three.js", "Tailwind", "Shadcn/UI", "Vite", "GLSL"],
+  ["Claude Code", "Gemini", "Copilot", "Docker", "Azure", "CI/CD", "Acessibilidade", "UI/UX"],
+];
+
+function Row({ items, outline }: { items: string[]; outline?: boolean }) {
+  return (
+    <div className="flex shrink-0 gap-12 pr-12">
+      {items.map((m, i) => (
+        <span
+          key={m}
+          className={`text-5xl font-bold tracking-tight md:text-8xl ${(i + (outline ? 1 : 0)) % 2 ? "text-outline" : "text-white/90"}`}
+        >
+          {m} <span className="text-cyan">✦</span>
+        </span>
+      ))}
+    </div>
+  );
+}
 
 export function Stack() {
   return (
-    <section id="stack" className="relative py-28 md:py-40">
-      <div className="relative mb-20 overflow-hidden border-y border-line py-6" aria-hidden>
-        <div className="marquee flex w-max gap-12 whitespace-nowrap">
-          {[...marquee, ...marquee].map((m, i) => (
-            <span key={i} className={`text-5xl font-bold tracking-tight md:text-7xl ${i % 2 ? "text-outline" : "text-white/90"}`}>
-              {m} <span className="text-cyan">✦</span>
-            </span>
-          ))}
-        </div>
+    <section id="stack" className="relative overflow-hidden py-28 md:py-40">
+      <div className="relative mb-20 -rotate-2 space-y-4 border-y border-line bg-ink py-6" aria-hidden>
+        <VelocityMarquee baseVelocity={-2.5}>
+          <Row items={rows[0]} />
+        </VelocityMarquee>
+        <VelocityMarquee baseVelocity={2.5}>
+          <Row items={rows[1]} outline />
+        </VelocityMarquee>
       </div>
 
       <div className="mx-auto max-w-7xl px-4 md:px-8">
         <SectionHeader
-          index="04"
+          index="05"
           label="Stack & competências"
           title={
             <>

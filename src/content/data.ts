@@ -9,7 +9,7 @@ export const profile = {
   linkedin: "https://www.linkedin.com/in/renan-augusto-santos/",
   github: "https://github.com/renanfrontend",
   cv: "/curriculo-renan-augusto.pdf",
-  status: "Disponível para novos desafios",
+  status: "Disponível para vagas e projetos",
   pitch:
     "Senior Frontend Engineer com 6+ anos entregando produtos web em React, Next.js e TypeScript — de dashboards corporativos a experiências 3D. Uso IA no dia a dia de engenharia para entregar mais rápido, com qualidade.",
   summary:
@@ -49,7 +49,7 @@ export const experience: Role[] = [
     company: "MWM Motores e Geradores",
     title: "Senior Frontend Engineer",
     level: "Sênior",
-    period: "set/2025 — 2026",
+    period: "set/2025 — set/2026",
     place: "São Paulo · Híbrido",
     summary: "Frontend de sistemas corporativos e logísticos, do componente à infraestrutura no Azure.",
     points: [
@@ -126,10 +126,13 @@ export const experience: Role[] = [
 export type Project = {
   name: string;
   kind: string;
+  /** Uma frase: o que o projeto resolve, para leitura rápida. */
+  headline: string;
   description: string;
   stack: string[];
   repo?: string;
   live?: string;
+  image?: string;
   featured?: boolean;
   accent: string;
 };
@@ -139,81 +142,138 @@ const gh = (repo: string) => `https://github.com/renanfrontend/${repo}`;
 export const projects: Project[] = [
   {
     name: "MWM Portal",
-    kind: "Produto corporativo · MWM",
+    kind: "Produto corporativo · Indústria",
+    headline: "BI para operações agroindustriais, do dado à decisão.",
     description:
-      "Portal de Business Intelligence para operações agroindustriais: abastecimento, faturamento, coleta e cooperados, com RBAC por perfil e filial. Migrado de Bulma para Tailwind + Shadcn/UI.",
+      "Portal de Business Intelligence para abastecimento, faturamento, coleta e cooperados, com controle de acesso por perfil e filial. Interface migrada de Bulma para Tailwind + Shadcn/UI.",
     stack: ["React", "TypeScript", "Tailwind", "Shadcn/UI", "Recharts", "Azure"],
     featured: true,
     accent: "#22d3ee",
   },
   {
-    name: "Gemini Beyond Prompts",
-    kind: "IA · RAG · Agentes",
+    name: "Aster Centro Terapêutico",
+    kind: "Cliente · Site institucional",
+    headline: "Presença digital que transmite acolhimento e gera contato.",
     description:
-      "Sistema de IA multifuncional: chat com memória via Google Gemini, análise de documentos com RAG e busca semântica, e agentes autônomos orquestrados com LangGraph.",
-    stack: ["Next.js", "TypeScript", "Gemini", "RAG", "LangGraph"],
-    repo: gh("gemini-beyond-prompts"),
-    live: "https://gemini-beyond-prompts.vercel.app",
+      "Site completo para uma clínica: landing responsiva com tema claro/escuro, blog com compartilhamento, contato via WhatsApp e formulário, consentimento LGPD e SEO com sitemap e Open Graph.",
+    stack: ["HTML", "CSS", "JavaScript", "SEO", "LGPD"],
+    repo: gh("aster-ct"),
+    live: "https://renanfrontend.github.io/aster-ct/",
+    image: "/projects/aster.png",
+    featured: true,
+    accent: "#facc15",
+  },
+  {
+    name: "Escudo Cidadão",
+    kind: "Cibersegurança · Fullstack",
+    headline: "Proteção contra fraudes digitais para o cidadão comum.",
+    description:
+      "Aplicação B2C com painel de score de segurança, verificação de links e monitoramento, consumindo uma API Node.js dedicada à inteligência de ameaças.",
+    stack: ["React", "TypeScript", "Material UI", "Node.js", "Express"],
+    repo: gh("escudo-cidadao"),
+    live: "https://escudo-cidadao.netlify.app/",
+    image: "/projects/escudo.png",
     featured: true,
     accent: "#a78bfa",
   },
   {
     name: "Manor Escape",
     kind: "Jogo web · 3D",
+    headline: "Escape room jogável no navegador, com cofre em 3D.",
     description:
-      "Escape room vitoriano no navegador com cofre 3D interativo. Fluxo modelado em XState, estado em Zustand, Clean Architecture e testes E2E com Playwright.",
+      "Quatro enigmas encadeados e um cofre 3D interativo. Fluxo modelado em XState, estado em Zustand, Clean Architecture e testes E2E com Playwright.",
     stack: ["React 19", "three.js", "R3F", "XState", "Zustand", "Playwright"],
     repo: gh("manor-escape"),
+    live: "https://renanfrontend.github.io/manor-escape/",
+    image: "/projects/manor.png",
     featured: true,
-    accent: "#f472b6",
+    accent: "#e0b566",
+  },
+  {
+    name: "Gemini Beyond Prompts",
+    kind: "IA · RAG · Agentes",
+    headline: "Chat, análise de documentos e agentes em um só lugar.",
+    description:
+      "Sistema de IA multifuncional: chat com memória via Google Gemini, análise de documentos com RAG e busca semântica, e agentes autônomos orquestrados com LangGraph.",
+    stack: ["Next.js", "TypeScript", "Gemini", "RAG", "LangGraph"],
+    repo: gh("gemini-beyond-prompts"),
+    live: "https://gemini-beyond-prompts.vercel.app",
+    image: "/projects/gemini.png",
+    featured: true,
+    accent: "#60a5fa",
   },
   {
     name: "HELIOS Lab",
     kind: "Game · Simulação física",
+    headline: "Puzzles que são sistemas físicos reais.",
     description:
-      "Survival horror em câmera fixa onde os puzzles são sistemas dinâmicos reais: pêndulo duplo caótico (RK4), convecção de Rayleigh e placa de Galton. Renderer e áudio procedurais próprios.",
-    stack: ["TypeScript", "Canvas 2D", "WebAudio", "Física numérica"],
+      "Survival horror em câmera fixa com pêndulo duplo caótico (RK4), convecção de Rayleigh e placa de Galton. Renderer e áudio procedurais próprios.",
+    stack: ["TypeScript", "Canvas 2D", "WebAudio"],
     repo: gh("helios-lab"),
-    featured: true,
     accent: "#fb923c",
   },
   {
-    name: "Escudo Cidadão",
-    kind: "Cibersegurança · Fullstack",
-    description:
-      "Aplicação B2C que protege o cidadão contra fraudes digitais, com API Node.js dedicada à inteligência de ameaças.",
-    stack: ["React", "TypeScript", "Material UI", "Node.js", "Express"],
-    repo: gh("escudo-cidadao"),
-    live: "https://escudo-cidadao.netlify.app/",
-    accent: "#34d399",
+    name: "GasControl",
+    kind: "Dashboard · Condomínios",
+    headline: "Consumo de gás sob controle.",
+    description: "KPIs, gráficos de consumo, alertas, sidebar inteligente e tema claro/escuro.",
+    stack: ["React", "TypeScript", "Charts"],
+    repo: gh("gascontrol-frontend"),
+    image: "/projects/gascontrol.png",
+    accent: "#c084fc",
   },
   {
     name: "Nexus 3D",
     kind: "Experiência 3D",
-    description:
-      "Portfólio 3D com tema Matrix: shaders GLSL, modelo sci-fi e efeito de chuva de código em React Three Fiber.",
-    stack: ["R3F", "GLSL", "three.js", "Vite"],
+    headline: "Portfólio 3D com tema Matrix.",
+    description: "Shaders GLSL, modelo sci-fi e chuva de código em React Three Fiber.",
+    stack: ["R3F", "GLSL", "three.js"],
     repo: gh("nexus-3d"),
     accent: "#4ade80",
   },
   {
-    name: "GasControl",
-    kind: "Dashboard · IoT",
-    description:
-      "Gestão de consumo de gás em condomínios: KPIs, gráficos de consumo, alertas, sidebar inteligente e tema claro/escuro.",
-    stack: ["React", "TypeScript", "Charts"],
-    repo: gh("gascontrol-frontend"),
-    accent: "#38bdf8",
-  },
-  {
     name: "Paróquia Conectada",
     kind: "App mobile",
-    description:
-      "App React Native para comunicação paroquial: horários, liturgia diária, mural, pedidos de oração e dízimo via PIX, com cache offline.",
-    stack: ["React Native", "Expo Router", "Supabase", "TypeScript"],
+    headline: "Comunicação paroquial no bolso.",
+    description: "Horários, liturgia diária, mural, pedidos de oração e dízimo via PIX, com cache offline.",
+    stack: ["React Native", "Expo", "Supabase"],
     repo: gh("paroquia-app"),
-    accent: "#facc15",
+    accent: "#f472b6",
   },
+];
+
+export const services = [
+  {
+    title: "Sites e landing pages",
+    text: "Rápidos, responsivos e prontos para o Google — pensados para transformar visita em contato.",
+    tags: ["Next.js", "SEO", "Animações"],
+    example: "Aster Centro Terapêutico",
+  },
+  {
+    title: "Sistemas web e dashboards",
+    text: "Painéis e portais que organizam dados e operação, com controle de acesso e ótima usabilidade.",
+    tags: ["React", "TypeScript", "Gráficos"],
+    example: "MWM Portal · GasControl",
+  },
+  {
+    title: "Experiências 3D e interativas",
+    text: "Produtos que marcam: WebGL, shaders e interações que fazem sua marca ser lembrada.",
+    tags: ["three.js", "WebGL", "GLSL"],
+    example: "Manor Escape · este site",
+  },
+  {
+    title: "Produtos com IA",
+    text: "Chat, análise de documentos e agentes integrados ao seu produto, com interface clara.",
+    tags: ["Gemini", "RAG", "Agentes"],
+    example: "Gemini Beyond Prompts",
+  },
+];
+
+export const workflow = [
+  { step: "01", title: "Descoberta", text: "Entendo o objetivo, o público e o que define sucesso." },
+  { step: "02", title: "Protótipo", text: "Estrutura e visual validados antes de escrever código." },
+  { step: "03", title: "Desenvolvimento", text: "Entregas frequentes, com código tipado e testado." },
+  { step: "04", title: "Lançamento", text: "Deploy, SEO e acompanhamento para evoluir com dados." },
 ];
 
 export const skills = [

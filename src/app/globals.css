@@ -11,15 +11,18 @@
   --font-mono: var(--font-jetbrains), ui-monospace, monospace;
 }
 
+/* overflow-x: clip (e não hidden) impede que brilhos decorativos alarguem a viewport
+   no mobile sem criar contêiner de rolagem, preservando o position: sticky. */
 html {
   background: var(--color-ink);
   color-scheme: dark;
+  overflow-x: clip;
 }
 
 body {
   background: var(--color-ink);
   color: #e6e9f2;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 @media (pointer: fine) {
@@ -148,12 +151,6 @@ body {
   to { --angle: 360deg; }
 }
 
-.marquee {
-  animation: marquee 40s linear infinite;
-}
-@keyframes marquee {
-  to { transform: translateX(-50%); }
-}
 
 @keyframes scan {
   0% { transform: translateY(-100%); }
@@ -168,4 +165,40 @@ body {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
   }
+}
+
+/* Nome gigante do rodapé: holofote revela o preenchimento em gradiente */
+.giant-name {
+  --x: -999px;
+  --y: -999px;
+}
+.giant-name__lit {
+  background: linear-gradient(100deg, #22d3ee, #8b5cf6, #f0abfc);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-mask-image: radial-gradient(260px circle at var(--x) var(--y), #000 20%, transparent 70%);
+  mask-image: radial-gradient(260px circle at var(--x) var(--y), #000 20%, transparent 70%);
+}
+
+/* Acessibilidade: foco visível para teclado e link de pular conteúdo */
+:focus-visible {
+  outline: 2px solid var(--color-cyan);
+  outline-offset: 3px;
+  border-radius: 8px;
+}
+.skip-link {
+  position: fixed;
+  left: 16px;
+  top: -60px;
+  z-index: 300;
+  padding: 10px 16px;
+  border-radius: 12px;
+  background: var(--color-cyan);
+  color: var(--color-ink);
+  font-weight: 600;
+  transition: top 0.2s;
+}
+.skip-link:focus {
+  top: 16px;
 }

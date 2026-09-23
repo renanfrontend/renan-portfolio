@@ -1,6 +1,35 @@
+"use client";
+
+import { useRef } from "react";
 import { profile } from "@/content/data";
-import { Magnetic, Reveal, Scramble } from "../effects";
+import { Magnetic, Reveal, Scramble, TiltCard } from "../effects";
 import { Arrow, Icons } from "../ui";
+
+const mail = (subject: string, body = "") =>
+  `mailto:${profile.email}?subject=${encodeURIComponent(subject)}${body ? `&body=${encodeURIComponent(body)}` : ""}`;
+
+const paths = [
+  {
+    tag: "Recrutadores",
+    title: "Tem uma vaga?",
+    text: "Posições Senior Frontend com React, Next.js e TypeScript. Currículo atualizado a um clique.",
+    primary: { label: "Baixar currículo", href: profile.cv, download: true },
+    secondary: { label: "Falar sobre a vaga", href: mail("Oportunidade — Senior Frontend") },
+    accent: "#22d3ee",
+  },
+  {
+    tag: "Empresas & clientes",
+    title: "Tem um projeto?",
+    text: "Sites, sistemas, dashboards, produtos com IA e experiências 3D. Conte a ideia e o prazo.",
+    primary: {
+      label: "Solicitar orçamento",
+      href: mail("Orçamento de projeto", "Olá, Renan!\n\nSobre o projeto:\n- O que precisa ser feito:\n- Prazo desejado:\n- Referências (links):\n"),
+      download: false,
+    },
+    secondary: { label: "Ver serviços", href: "#servicos" },
+    accent: "#8b5cf6",
+  },
+];
 
 const channels = [
   { label: "E-mail", value: profile.email, href: `mailto:${profile.email}`, icon: Icons.mail },
@@ -8,16 +37,38 @@ const channels = [
   { label: "GitHub", value: "@renanfrontend", href: profile.github, icon: Icons.github },
 ];
 
+function GiantName() {
+  const ref = useRef<HTMLDivElement>(null);
+  return (
+    <div
+      ref={ref}
+      onPointerMove={(e) => {
+        const r = ref.current?.getBoundingClientRect();
+        if (!r || !ref.current) return;
+        ref.current.style.setProperty("--x", `${e.clientX - r.left}px`);
+        ref.current.style.setProperty("--y", `${e.clientY - r.top}px`);
+      }}
+      className="giant-name relative mt-24 select-none overflow-hidden"
+      aria-hidden
+    >
+      <p className="text-outline whitespace-nowrap text-center text-[13vw] font-bold leading-[0.8] tracking-[-0.05em]">RENAN AUGUSTO</p>
+      <p className="giant-name__lit absolute inset-0 whitespace-nowrap text-center text-[13vw] font-bold leading-[0.8] tracking-[-0.05em]">
+        RENAN AUGUSTO
+      </p>
+    </div>
+  );
+}
+
 export function Contact() {
   return (
-    <section id="contato" className="relative overflow-hidden px-4 pb-10 pt-28 md:px-8 md:pt-40">
+    <section id="contato" className="relative overflow-hidden pt-28 md:pt-40">
       <div className="bg-grid absolute inset-0" aria-hidden />
-      <div className="pointer-events-none absolute left-1/2 top-1/3 h-[600px] w-[900px] -translate-x-1/2 rounded-full bg-gradient-to-r from-cyan/20 via-violet/20 to-fuchsia-500/10 blur-[160px]" aria-hidden />
+      <div className="pointer-events-none absolute left-1/2 top-1/4 h-[600px] w-[900px] -translate-x-1/2 rounded-full bg-gradient-to-r from-cyan/20 via-violet/20 to-fuchsia-500/10 blur-[160px]" aria-hidden />
 
-      <div className="relative mx-auto max-w-7xl text-center">
+      <div className="relative mx-auto max-w-7xl px-4 text-center md:px-8">
         <Reveal>
           <p className="font-mono text-xs uppercase tracking-[0.3em] text-cyan">
-            05 — <Scramble text="Conexão aberta" />
+            06 — <Scramble text="Conexão aberta" />
           </p>
         </Reveal>
         <Reveal delay={0.1}>
@@ -25,32 +76,37 @@ export function Contact() {
             Vamos construir algo <span className="text-gradient">extraordinário?</span>
           </h2>
         </Reveal>
-        <Reveal delay={0.2}>
-          <p className="mx-auto mt-8 max-w-xl text-lg text-muted">
-            Aberto a novos desafios, projetos e boas conversas sobre frontend, 3D na web e IA aplicada.
-          </p>
-        </Reveal>
-        <Reveal delay={0.3} className="mt-12 flex flex-wrap items-center justify-center gap-4">
-          <Magnetic>
-            <a
-              href={`mailto:${profile.email}`}
-              className="group relative inline-flex items-center gap-3 overflow-hidden rounded-full bg-gradient-to-r from-cyan to-violet px-10 py-5 text-lg font-medium text-ink shadow-[0_0_60px_-10px_rgba(34,211,238,.7)]"
-            >
-              Enviar mensagem <Arrow className="h-5 w-5 transition group-hover:rotate-45" />
-            </a>
-          </Magnetic>
-          <Magnetic>
-            <a
-              href={profile.cv}
-              download
-              className="inline-flex items-center gap-2 rounded-full border border-line px-8 py-5 text-lg text-slate-200 backdrop-blur transition hover:border-cyan/60 hover:text-white"
-            >
-              Baixar currículo (PDF)
-            </a>
-          </Magnetic>
-        </Reveal>
 
-        <div className="mx-auto mt-20 grid max-w-4xl gap-4 md:grid-cols-3">
+        <div className="mx-auto mt-16 grid max-w-5xl gap-6 text-left md:grid-cols-2">
+          {paths.map((p, i) => (
+            <Reveal key={p.tag} delay={0.1 * i} className="h-full">
+              <TiltCard accent={p.accent} className="flex h-full flex-col rounded-3xl border border-line bg-panel/80 p-8 backdrop-blur">
+                <p className="font-mono text-xs uppercase tracking-[0.25em]" style={{ color: p.accent }}>
+                  {p.tag}
+                </p>
+                <h3 className="mt-4 text-3xl font-semibold">{p.title}</h3>
+                <p className="mt-3 flex-1 leading-relaxed text-muted">{p.text}</p>
+                <div className="mt-8 flex flex-wrap items-center gap-3">
+                  <Magnetic>
+                    <a
+                      href={p.primary.href}
+                      download={p.primary.download || undefined}
+                      className="group inline-flex items-center gap-2 rounded-full px-6 py-3.5 font-medium text-ink transition hover:brightness-110"
+                      style={{ background: `linear-gradient(90deg, ${p.accent}, #e6e9f2)` }}
+                    >
+                      {p.primary.label} <Arrow className="transition group-hover:rotate-45" />
+                    </a>
+                  </Magnetic>
+                  <a href={p.secondary.href} className="rounded-full px-4 py-3.5 text-slate-300 transition hover:text-white">
+                    {p.secondary.label}
+                  </a>
+                </div>
+              </TiltCard>
+            </Reveal>
+          ))}
+        </div>
+
+        <div className="mx-auto mt-6 grid max-w-5xl gap-4 md:grid-cols-3">
           {channels.map((c, i) => (
             <Reveal key={c.label} delay={0.1 * i}>
               <a
@@ -72,9 +128,11 @@ export function Contact() {
         </div>
       </div>
 
-      <footer className="relative mx-auto mt-28 flex max-w-7xl flex-col items-center justify-between gap-4 border-t border-line pt-8 font-mono text-xs text-muted md:flex-row">
+      <GiantName />
+
+      <footer className="relative mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 border-t border-line px-4 py-8 font-mono text-xs text-muted md:flex-row md:px-8">
         <p>© {new Date().getFullYear()} {profile.name}</p>
-        <p>Next.js · TypeScript · three.js · deploy na Vercel</p>
+        <p>Next.js · TypeScript · three.js · feito à mão em São Paulo</p>
         <a href="#top" className="hover:text-white">
           voltar ao topo ↑
         </a>
