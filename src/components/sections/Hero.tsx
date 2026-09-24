@@ -3,15 +3,17 @@
 import { motion, useInView, useScroll, useTransform } from "motion/react";
 import dynamic from "next/dynamic";
 import { useRef } from "react";
-import { profile } from "@/content/data";
+import { person } from "@/content/shared";
+import { useContent } from "@/i18n/provider";
 import { Magnetic, Scramble, useIntroDone } from "../effects";
-import { Arrow, Icons } from "../ui";
+import { Arrow, Icons, Rich } from "../ui";
 
 const HeroScene = dynamic(() => import("../three/HeroScene"), { ssr: false });
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
 export function Hero() {
+  const { profile, ui } = useContent();
   const ref = useRef<HTMLElement>(null);
   const ready = useIntroDone();
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
@@ -41,7 +43,7 @@ export function Hero() {
         {["left-0 top-20 border-l border-t", "right-0 top-20 border-r border-t", "left-0 bottom-0 border-l border-b", "right-0 bottom-0 border-r border-b"].map((c) => (
           <span key={c} className={`absolute h-6 w-6 border-cyan/40 ${c}`} />
         ))}
-        <span className="absolute bottom-2 left-10 font-mono text-[10px] tracking-[0.3em] text-muted">23°33′S 46°38′W · SÃO PAULO</span>
+        <span className="absolute bottom-2 left-10 font-mono text-[10px] tracking-[0.3em] text-muted">{ui.hero.hud}</span>
       </div>
 
       <motion.div style={{ y: textY, opacity: textOpacity }} className="relative z-10 mx-auto w-full max-w-7xl px-4 md:px-8">
@@ -76,9 +78,7 @@ export function Hero() {
             <span className="text-muted">&gt;_</span> {profile.role}
           </p>
           <p className="mt-4 text-lg leading-relaxed text-slate-300 md:text-xl">
-            <span className="text-white">6+ anos</span> criando produtos web com <span className="text-white">React</span>,{" "}
-            <span className="text-white">Next.js</span> e <span className="text-white">TypeScript</span> — de sistemas corporativos a
-            experiências 3D, com IA no fluxo de desenvolvimento.
+            <Rich text={profile.heroLead} />
           </p>
           <p className="mt-4 font-mono text-xs uppercase tracking-wider text-slate-400">
             {profile.location} <span className="text-cyan">/</span> {profile.workModes}
@@ -93,7 +93,7 @@ export function Hero() {
               className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full bg-white px-7 py-4 font-medium text-ink"
             >
               <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-cyan to-violet transition-transform duration-500 group-hover:translate-x-0" />
-              <span className="relative">Baixar currículo</span>
+              <span className="relative">{ui.hero.downloadCv}</span>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="relative h-4 w-4 transition group-hover:translate-y-0.5" aria-hidden>
                 <path d="M12 4v12m0 0-5-5m5 5 5-5M5 20h14" />
               </svg>
@@ -104,13 +104,13 @@ export function Hero() {
               href="#servicos"
               className="group inline-flex items-center gap-2 rounded-full border border-line bg-ink/40 px-7 py-4 text-slate-200 backdrop-blur transition hover:border-cyan/60 hover:text-white"
             >
-              Tenho um projeto <Arrow className="transition group-hover:rotate-45" />
+              {ui.hero.project} <Arrow className="transition group-hover:rotate-45" />
             </a>
           </Magnetic>
           <div className="flex items-center gap-2">
             {[
-              { href: profile.linkedin, label: "LinkedIn", icon: Icons.linkedin },
-              { href: profile.github, label: "GitHub", icon: Icons.github },
+              { href: person.linkedin, label: "LinkedIn", icon: Icons.linkedin },
+              { href: person.github, label: "GitHub", icon: Icons.github },
             ].map((s) => (
               <a
                 key={s.label}
@@ -128,7 +128,7 @@ export function Hero() {
       </motion.div>
 
       <a href="#sobre" className="absolute bottom-12 right-12 z-10 hidden flex-col items-center gap-2 font-mono text-[10px] tracking-[0.3em] text-muted md:flex">
-        SCROLL
+        {ui.hero.scroll}
         <span className="relative h-10 w-px overflow-hidden bg-line">
           <motion.span className="absolute inset-x-0 top-0 h-4 bg-cyan" animate={{ y: [-16, 40] }} transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }} />
         </span>

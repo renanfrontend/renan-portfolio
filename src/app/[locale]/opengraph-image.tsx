@@ -1,11 +1,14 @@
 import { ImageResponse } from "next/og";
-import { profile } from "@/content/data";
+import { getContent, person } from "@/content";
+import { defaultLocale, isLocale } from "@/i18n/config";
 
-export const alt = `${profile.shortName} — ${profile.role}`;
+export const alt = `${person.shortName} — Senior Frontend Engineer`;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-export default function Image() {
+export default async function Image({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const { profile } = getContent(isLocale(locale) ? locale : defaultLocale);
   return new ImageResponse(
     (
       <div

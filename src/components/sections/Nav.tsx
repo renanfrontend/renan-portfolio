@@ -2,27 +2,52 @@
 
 import { AnimatePresence, motion, useScroll, useSpring } from "motion/react";
 import { useEffect, useState } from "react";
+import { LOCALE_COOKIE, locales, type Locale } from "@/i18n/config";
+import { useContent } from "@/i18n/provider";
 
-const links = [
-  { href: "#sobre", label: "Resumo", n: "01" },
-  { href: "#experiencia", label: "Experiência", n: "02" },
-  { href: "#projetos", label: "Projetos", n: "03" },
-  { href: "#servicos", label: "Serviços", n: "04" },
-  { href: "#stack", label: "Stack", n: "05" },
-];
+const SECTION_IDS = ["sobre", "experiencia", "projetos", "servicos", "stack", "contato"];
 
-function Clock() {
+/** Troca de idioma: grava a escolha (vale mais que a região na próxima visita) e mantém a seção atual. */
+function LanguageSwitch({ current, label }: { current: Locale; label: string }) {
+  return (
+    <div role="group" aria-label={label} className="flex items-center rounded-lg border border-line p-0.5 font-mono text-[11px]">
+      {locales.map((l) => {
+        const active = l === current;
+        return (
+          <a
+            key={l}
+            href={`/${l}`}
+            hrefLang={l}
+            lang={l}
+            aria-current={active ? "true" : undefined}
+            onClick={(e) => {
+              document.cookie = `${LOCALE_COOKIE}=${l}; path=/; max-age=31536000; samesite=lax`;
+              if (active) return e.preventDefault();
+              // Troca de idioma = outro layout raiz, então é navegação completa; leva junto a seção atual.
+              e.currentTarget.href = `/${l}${window.location.hash}`;
+            }}
+            className={`rounded-md px-2 py-1 uppercase transition ${active ? "bg-white text-ink" : "text-slate-400 hover:text-white"}`}
+          >
+            {l}
+          </a>
+        );
+      })}
+    </div>
+  );
+}
+
+function Clock({ lang }: { lang: string }) {
   const [time, setTime] = useState("");
   useEffect(() => {
     const fmt = () =>
-      setTime(new Date().toLocaleTimeString("pt-BR", { timeZone: "America/Sao_Paulo", hour: "2-digit", minute: "2-digit" }));
+      setTime(new Date().toLocaleTimeString(lang, { timeZone: "America/Sao_Paulo", hour: "2-digit", minute: "2-digit" }));
     const first = setTimeout(fmt, 0);
     const id = setInterval(fmt, 30_000);
     return () => {
       clearTimeout(first);
       clearInterval(id);
     };
-  }, []);
+  }, [lang]);
   return <span className="tabular-nums">{time || "--:--"}</span>;
 }
 
@@ -30,7 +55,6 @@ function Clock() {
 function useActiveSection() {
   const [active, setActive] = useState("");
   useEffect(() => {
-    const ids = [...links.map((l) => l.href.slice(1)), "contato"];
     const io = new IntersectionObserver(
       (entries) => {
         const visible = entries.filter((e) => e.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
@@ -38,7 +62,7 @@ function useActiveSection() {
       },
       { rootMargin: "-40% 0px -55% 0px", threshold: [0, 0.25, 0.5, 1] },
     );
-    ids.forEach((id) => {
+    SECTION_IDS.forEach((id) => {
       const el = document.getElementById(id);
       if (el) io.observe(el);
     });
@@ -48,6 +72,9 @@ function useActiveSection() {
 }
 
 export function Nav() {
+  const { locale, htmlLang, ui } = useContent();
+  const t = ui.nav;
+  const links = t.links;
   const { scrollYProgress } = useScroll();
   const progress = useSpring(scrollYProgress, { stiffness: 120, damping: 30 });
   const [open, setOpen] = useState(false);
@@ -57,7 +84,7 @@ export function Nav() {
     <header className="fixed inset-x-0 top-0 z-50">
       <motion.div className="h-[2px] origin-left bg-gradient-to-r from-cyan via-violet to-fuchsia-400" style={{ scaleX: progress }} />
       <nav
-        aria-label="Principal"
+        aria-label="Main"
         className="mx-3 mt-3 flex max-w-7xl items-center justify-between rounded-2xl border border-line bg-ink/60 px-4 py-2.5 backdrop-blur-xl md:mx-6 md:px-5 xl:mx-auto"
       >
         <a href="#top" className="group flex items-center gap-2 font-mono text-sm">
@@ -98,21 +125,22 @@ export function Nav() {
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
             </span>
-            SP · <Clock />
+            SP · <Clock lang={htmlLang} />
           </span>
+          <LanguageSwitch current={locale} label={t.language} />
           <a
             href="#contato"
-            className={`rounded-xl px-4 py-2 text-sm font-medium transition ${
+            className={`whitespace-nowrap rounded-xl px-4 py-2 text-sm font-medium transition ${
               active === "contato" ? "bg-cyan text-ink" : "bg-white text-ink hover:bg-cyan"
             }`}
           >
-            Contratar
+            {t.hire}
           </a>
           <button
             type="button"
             className="grid h-9 w-9 place-items-center rounded-lg border border-line lg:hidden"
             onClick={() => setOpen((o) => !o)}
-            aria-label={open ? "Fechar menu" : "Abrir menu"}
+            aria-label={open ? t.closeMenu : t.openMenu}
             aria-expanded={open}
           >
             <span className="flex flex-col gap-1.5">

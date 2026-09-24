@@ -1,11 +1,8 @@
-import { skills } from "@/content/data";
-import { Reveal, TiltCard, VelocityMarquee } from "../effects";
-import { SectionHeader } from "../ui";
+"use client";
 
-const rows = [
-  ["React", "Next.js", "TypeScript", "three.js", "Tailwind", "Shadcn/UI", "Vite", "GLSL"],
-  ["Claude Code", "Gemini", "Copilot", "Docker", "Azure", "CI/CD", "Acessibilidade", "UI/UX"],
-];
+import { useContent } from "@/i18n/provider";
+import { Reveal, TiltCard, VelocityMarquee } from "../effects";
+import { Rich, SectionHeader } from "../ui";
 
 function Row({ items, outline }: { items: string[]; outline?: boolean }) {
   return (
@@ -23,6 +20,9 @@ function Row({ items, outline }: { items: string[]; outline?: boolean }) {
 }
 
 export function Stack() {
+  const { skills, ui } = useContent();
+  const t = ui.stack;
+  const rows = t.rows;
   return (
     <section id="stack" className="relative overflow-hidden py-28 md:py-40">
       <div className="relative mb-20 -rotate-2 space-y-4 border-y border-line bg-ink py-6" aria-hidden>
@@ -35,16 +35,8 @@ export function Stack() {
       </div>
 
       <div className="mx-auto max-w-7xl px-4 md:px-8">
-        <SectionHeader
-          index="05"
-          label="Stack & competências"
-          title={
-            <>
-              Ferramentas que <span className="text-gradient">domino</span>
-            </>
-          }
-        >
-          Do pixel ao pipeline: interface, experiência, IA aplicada ao desenvolvimento e a infraestrutura que coloca tudo em produção.
+        <SectionHeader index="05" label={t.label} title={<Rich text={t.title} />}>
+          {t.sub}
         </SectionHeader>
 
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">

@@ -1,40 +1,18 @@
 "use client";
 
 import { useRef } from "react";
-import { profile } from "@/content/data";
+import { person } from "@/content/shared";
+import { useContent } from "@/i18n/provider";
 import { Magnetic, Reveal, Scramble, TiltCard } from "../effects";
-import { Arrow, Icons } from "../ui";
+import { Arrow, Icons, Rich } from "../ui";
 
 const mail = (subject: string, body = "") =>
-  `mailto:${profile.email}?subject=${encodeURIComponent(subject)}${body ? `&body=${encodeURIComponent(body)}` : ""}`;
-
-const paths = [
-  {
-    tag: "Recrutadores",
-    title: "Tem uma vaga?",
-    text: "Posições Senior Frontend com React, Next.js e TypeScript. Currículo atualizado a um clique.",
-    primary: { label: "Baixar currículo", href: profile.cv, download: true },
-    secondary: { label: "Falar sobre a vaga", href: mail("Oportunidade — Senior Frontend") },
-    accent: "#22d3ee",
-  },
-  {
-    tag: "Empresas & clientes",
-    title: "Tem um projeto?",
-    text: "Sites, sistemas, dashboards, produtos com IA e experiências 3D. Conte a ideia e o prazo.",
-    primary: {
-      label: "Solicitar orçamento",
-      href: mail("Orçamento de projeto", "Olá, Renan!\n\nSobre o projeto:\n- O que precisa ser feito:\n- Prazo desejado:\n- Referências (links):\n"),
-      download: false,
-    },
-    secondary: { label: "Ver serviços", href: "#servicos" },
-    accent: "#8b5cf6",
-  },
-];
+  `mailto:${person.email}?subject=${encodeURIComponent(subject)}${body ? `&body=${encodeURIComponent(body)}` : ""}`;
 
 const channels = [
-  { label: "E-mail", value: profile.email, href: `mailto:${profile.email}`, icon: Icons.mail },
-  { label: "LinkedIn", value: "in/renan-augusto-santos", href: profile.linkedin, icon: Icons.linkedin },
-  { label: "GitHub", value: "@renanfrontend", href: profile.github, icon: Icons.github },
+  { label: "E-mail", value: person.email, href: `mailto:${person.email}`, icon: Icons.mail },
+  { label: "LinkedIn", value: "in/renan-augusto-santos", href: person.linkedin, icon: Icons.linkedin },
+  { label: "GitHub", value: "@renanfrontend", href: person.github, icon: Icons.github },
 ];
 
 function GiantName() {
@@ -60,6 +38,23 @@ function GiantName() {
 }
 
 export function Contact() {
+  const { profile, ui } = useContent();
+  const t = ui.contact;
+  const paths = [
+    {
+      ...t.recruiters,
+      primary: { label: t.recruiters.primary, href: profile.cv, download: true },
+      secondary: { label: t.recruiters.secondary, href: mail(t.recruiters.subject) },
+      accent: "#22d3ee",
+    },
+    {
+      ...t.clients,
+      primary: { label: t.clients.primary, href: mail(ui.services.budgetSubject, ui.services.budgetBody), download: false },
+      secondary: { label: t.clients.secondary, href: "#servicos" },
+      accent: "#8b5cf6",
+    },
+  ];
+
   return (
     <section id="contato" className="relative overflow-hidden pt-28 md:pt-40">
       <div className="bg-grid absolute inset-0" aria-hidden />
@@ -68,12 +63,12 @@ export function Contact() {
       <div className="relative mx-auto max-w-7xl px-4 text-center md:px-8">
         <Reveal>
           <p className="font-mono text-xs uppercase tracking-[0.3em] text-cyan">
-            06 — <Scramble text="Conexão aberta" />
+            06 — <Scramble text={t.label} />
           </p>
         </Reveal>
         <Reveal delay={0.1}>
           <h2 className="mx-auto mt-6 max-w-5xl text-[clamp(2.75rem,8vw,7rem)] font-bold leading-[0.95] tracking-[-0.03em]">
-            Vamos construir algo <span className="text-gradient">extraordinário?</span>
+            <Rich text={t.title} />
           </h2>
         </Reveal>
 
@@ -131,10 +126,10 @@ export function Contact() {
       <GiantName />
 
       <footer className="relative mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 border-t border-line px-4 py-8 font-mono text-xs text-muted md:flex-row md:px-8">
-        <p>© {new Date().getFullYear()} {profile.name}</p>
-        <p>Next.js · TypeScript · three.js · feito à mão em São Paulo</p>
+        <p>© {new Date().getFullYear()} {person.name}</p>
+        <p>{t.footer}</p>
         <a href="#top" className="hover:text-white">
-          voltar ao topo ↑
+          {t.backToTop}
         </a>
       </footer>
     </section>

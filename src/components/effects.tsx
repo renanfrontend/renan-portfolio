@@ -270,10 +270,8 @@ export function useIntroDone() {
   );
 }
 
-const bootLines = ["iniciando renan.dev", "compilando shaders GLSL", "montando experiência"];
-
 /** Sequência de boot curta (~1,4s). Some de imediato com movimento reduzido. */
-export function Preloader() {
+export function Preloader({ lines }: { lines: string[] }) {
   const [visible, setVisible] = useState(true);
   const counter = useRef<HTMLSpanElement>(null);
   const bar = useRef<HTMLSpanElement>(null);
@@ -311,7 +309,7 @@ export function Preloader() {
           transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
         >
           <ul className="space-y-1 text-xs text-muted md:text-sm">
-            {bootLines.map((l, i) => (
+            {lines.map((l, i) => (
               <motion.li key={l} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.25 }}>
                 <span className="text-cyan">&gt;</span> {l}
                 <span className="text-emerald-400"> ok</span>

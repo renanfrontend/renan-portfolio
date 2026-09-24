@@ -7,14 +7,21 @@ import { Nav } from "@/components/sections/Nav";
 import { Projects } from "@/components/sections/Projects";
 import { Services } from "@/components/sections/Services";
 import { Stack } from "@/components/sections/Stack";
+import { getContent } from "@/content";
+import { isLocale } from "@/i18n/config";
+import { notFound } from "next/navigation";
 
-export default function Home() {
+export default async function Home({ params }: PageProps<"/[locale]">) {
+  const { locale } = await params;
+  if (!isLocale(locale)) notFound();
+  const { ui } = getContent(locale);
+
   return (
     <>
       <a href="#sobre" className="skip-link">
-        Pular para o conteúdo
+        {ui.skipLink}
       </a>
-      <Preloader />
+      <Preloader lines={ui.boot} />
       <SmoothScroll />
       <Cursor />
       <Nav />

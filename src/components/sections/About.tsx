@@ -1,19 +1,15 @@
-import { profile, stats, strengths } from "@/content/data";
+"use client";
+
+import { useContent } from "@/i18n/provider";
 import { Counter, Reveal, TiltCard } from "../effects";
-import { SectionHeader } from "../ui";
+import { Rich, SectionHeader } from "../ui";
 
 export function About() {
+  const { profile, stats, strengths, ui } = useContent();
+
   return (
     <section id="sobre" className="relative mx-auto max-w-7xl px-4 py-28 md:px-8 md:py-40">
-      <SectionHeader
-        index="01"
-        label="Resumo"
-        title={
-          <>
-            Frontend sênior com <span className="text-gradient">visão de produto</span>
-          </>
-        }
-      >
+      <SectionHeader index="01" label={ui.about.label} title={<Rich text={ui.about.title} />}>
         {profile.summary}
       </SectionHeader>
 

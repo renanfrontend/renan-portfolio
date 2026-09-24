@@ -23,6 +23,20 @@ export function SectionHeader({ index, label, title, children }: { index: string
   );
 }
 
+/** Renderiza a marcação dos dicionários: `{texto}` em gradiente e `**texto**` em branco. */
+export function Rich({ text }: { text: string }) {
+  const parts = text.split(/(\{[^}]+\}|\*\*[^*]+\*\*)/g).filter(Boolean);
+  return (
+    <>
+      {parts.map((part, i) => {
+        if (part.startsWith("{")) return <span key={i} className="text-gradient">{part.slice(1, -1)}</span>;
+        if (part.startsWith("**")) return <span key={i} className="text-white">{part.slice(2, -2)}</span>;
+        return part;
+      })}
+    </>
+  );
+}
+
 export function Tag({ children }: { children: ReactNode }) {
   return (
     <span className="rounded-full border border-line bg-white/[0.03] px-3 py-1 font-mono text-[11px] tracking-wide text-slate-300">

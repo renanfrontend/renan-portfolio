@@ -3,13 +3,16 @@
 import { motion, useScroll, useTransform, type MotionValue } from "motion/react";
 import Image from "next/image";
 import { useRef } from "react";
-import { profile, projects, type Project } from "@/content/data";
+import { person } from "@/content/shared";
+import type { Project } from "@/content/types";
+import { useContent } from "@/i18n/provider";
 import { Reveal, TiltCard, useIsDesktop } from "../effects";
-import { Arrow, Icons, SectionHeader, Tag } from "../ui";
+import { Arrow, Icons, Rich, SectionHeader, Tag } from "../ui";
 
 function Links({ p }: { p: Project }) {
+  const t = useContent().ui.projects;
   if (!p.live && !p.repo)
-    return <span className="font-mono text-[11px] uppercase tracking-wider text-muted">Código proprietário</span>;
+    return <span className="font-mono text-[11px] uppercase tracking-wider text-muted">{t.proprietary}</span>;
   return (
     <div className="flex flex-wrap items-center gap-3 text-sm">
       {p.live && (
@@ -19,7 +22,7 @@ function Links({ p }: { p: Project }) {
           rel="noreferrer"
           className="group inline-flex items-center gap-1.5 rounded-full bg-white px-4 py-2 font-medium text-ink transition hover:bg-cyan"
         >
-          Ver ao vivo <Arrow className="transition group-hover:rotate-45" />
+          {t.live} <Arrow className="transition group-hover:rotate-45" />
         </a>
       )}
       {p.repo && (
@@ -29,7 +32,7 @@ function Links({ p }: { p: Project }) {
           rel="noreferrer"
           className="inline-flex items-center gap-1.5 rounded-full border border-line px-4 py-2 text-slate-300 transition hover:border-white/40 hover:text-white"
         >
-          {Icons.github} Código
+          {Icons.github} {t.code}
         </a>
       )}
     </div>
@@ -38,6 +41,7 @@ function Links({ p }: { p: Project }) {
 
 /** Arte de "dashboard" para o produto proprietário, que não pode ter print público. */
 function DashboardArt({ accent }: { accent: string }) {
+  const kpis = useContent().ui.projects.dashboardKpis;
   const bars = [38, 62, 45, 80, 56, 92, 70, 84, 60, 96];
   return (
     <div className="absolute inset-0 grid grid-cols-[72px_1fr] bg-[#070a12]" aria-hidden>
@@ -48,7 +52,7 @@ function DashboardArt({ accent }: { accent: string }) {
       </div>
       <div className="p-5">
         <div className="grid grid-cols-3 gap-3">
-          {["Abastecimento", "Faturamento", "Coleta"].map((k, i) => (
+          {kpis.map((k, i) => (
             <div key={k} className="rounded-lg border border-white/5 bg-white/[0.03] p-3">
               <p className="text-[9px] uppercase tracking-wider text-white/40">{k}</p>
               <div className="mt-2 h-3 w-2/3 rounded" style={{ background: i === 0 ? accent : "rgba(255,255,255,.15)" }} />
@@ -70,7 +74,8 @@ function DashboardArt({ accent }: { accent: string }) {
 }
 
 function Mockup({ p, parallax }: { p: Project; parallax?: MotionValue<string> }) {
-  const host = p.live ? new URL(p.live).host : "portal.interno";
+  const t = useContent().ui.projects;
+  const host = p.live ? new URL(p.live).host : t.internalHost;
   return (
     <div className="group relative overflow-hidden rounded-2xl border border-white/10 bg-ink shadow-2xl shadow-black/60">
       <div className="flex items-center gap-2 border-b border-white/10 bg-white/[0.04] px-4 py-2.5">
@@ -84,7 +89,7 @@ function Mockup({ p, parallax }: { p: Project; parallax?: MotionValue<string> })
           <motion.div className="absolute inset-x-0 -top-[8%] h-[116%]" style={{ y: parallax }}>
             <Image
               src={p.image}
-              alt={`Tela do projeto ${p.name}`}
+              alt={`${t.screenshotOf} ${p.name}`}
               fill
               sizes="(min-width: 768px) 55vw, 100vw"
               className="object-cover object-top transition-transform duration-700 group-hover:scale-[1.04]"
@@ -101,6 +106,7 @@ function Mockup({ p, parallax }: { p: Project; parallax?: MotionValue<string> })
 
 function StackCard({ p, i, total, progress }: { p: Project; i: number; total: number; progress: MotionValue<number> }) {
   const desktop = useIsDesktop();
+  const t = useContent().ui.projects;
   const scale = useTransform(progress, [i / total, 1], [1, 1 - (total - i - 1) * 0.045]);
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
@@ -139,7 +145,7 @@ function StackCard({ p, i, total, progress }: { p: Project; i: number; total: nu
             </div>
           </div>
           {p.live ? (
-            <a href={p.live} target="_blank" rel="noreferrer" data-cursor="Abrir" aria-label={`Abrir ${p.name}`}>
+            <a href={p.live} target="_blank" rel="noreferrer" data-cursor={t.open} aria-label={`${t.open} ${p.name}`}>
               <Mockup p={p} parallax={parallax} />
             </a>
           ) : (
@@ -152,6 +158,8 @@ function StackCard({ p, i, total, progress }: { p: Project; i: number; total: nu
 }
 
 export function Projects() {
+  const { projects, ui } = useContent();
+  const t = ui.projects;
   const featured = projects.filter((p) => p.featured);
   const others = projects.filter((p) => !p.featured);
   const container = useRef<HTMLDivElement>(null);
@@ -160,16 +168,8 @@ export function Projects() {
   return (
     <section id="projetos" className="relative mx-auto max-w-7xl px-4 py-28 md:px-8 md:py-40">
       <div className="pointer-events-none absolute -right-40 top-40 h-[500px] w-[500px] rounded-full bg-violet/10 blur-[140px]" aria-hidden />
-      <SectionHeader
-        index="03"
-        label="Projetos"
-        title={
-          <>
-            Produtos reais, <span className="text-gradient">no ar</span>
-          </>
-        }
-      >
-        Sistemas corporativos, sites para clientes, produtos com IA e experiências 3D — clique nas telas para abrir cada projeto.
+      <SectionHeader index="03" label={t.label} title={<Rich text={t.title} />}>
+        {t.sub}
       </SectionHeader>
 
       <div ref={container} className="relative space-y-8 md:space-y-0">
@@ -179,7 +179,7 @@ export function Projects() {
       </div>
 
       <Reveal className="mt-24 md:mt-10">
-        <h3 className="mb-6 font-mono text-xs uppercase tracking-[0.3em] text-cyan">Mais projetos & laboratório</h3>
+        <h3 className="mb-6 font-mono text-xs uppercase tracking-[0.3em] text-cyan">{t.more}</h3>
       </Reveal>
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {others.map((p, i) => (
@@ -187,7 +187,7 @@ export function Projects() {
             <TiltCard accent={p.accent} className="flex h-full flex-col overflow-hidden rounded-3xl border border-line bg-panel/80">
               <div className="relative h-32 overflow-hidden border-b border-line bg-ink">
                 {p.image ? (
-                  <Image src={p.image} alt={`Tela do projeto ${p.name}`} fill sizes="300px" className="object-cover object-left-top opacity-80 transition duration-500 group-hover:scale-105 group-hover:opacity-100" />
+                  <Image src={p.image} alt={`${t.screenshotOf} ${p.name}`} fill sizes="300px" className="object-cover object-left-top opacity-80 transition duration-500 group-hover:scale-105 group-hover:opacity-100" />
                 ) : (
                   <>
                     <div className="bg-grid absolute inset-0" />
@@ -213,12 +213,12 @@ export function Projects() {
 
       <Reveal className="mt-12 flex justify-center">
         <a
-          href={profile.github}
+          href={person.github}
           target="_blank"
           rel="noreferrer"
           className="group inline-flex items-center gap-3 rounded-full border border-line px-6 py-3 font-mono text-sm text-slate-300 transition hover:border-cyan/60 hover:text-white"
         >
-          {Icons.github} +60 repositórios no GitHub <Arrow className="transition group-hover:rotate-45" />
+          {Icons.github} {t.repos} <Arrow className="transition group-hover:rotate-45" />
         </a>
       </Reveal>
     </section>

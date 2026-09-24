@@ -2,9 +2,10 @@
 
 import { motion, useScroll, useTransform } from "motion/react";
 import { useRef } from "react";
-import { profile, services, workflow } from "@/content/data";
+import { person } from "@/content/shared";
+import { useContent } from "@/i18n/provider";
 import { Magnetic, Reveal, TiltCard } from "../effects";
-import { Arrow, SectionHeader, Tag } from "../ui";
+import { Arrow, Rich, SectionHeader, Tag } from "../ui";
 
 const icons = [
   // navegador
@@ -17,11 +18,10 @@ const icons = [
   <path key="d" d="M12 3v4m0 10v4M3 12h4m10 0h4M6 6l2.5 2.5m7 7L18 18M6 18l2.5-2.5m7-7L18 6" />,
 ];
 
-const budgetLink = `mailto:${profile.email}?subject=${encodeURIComponent("Orçamento de projeto")}&body=${encodeURIComponent(
-  "Olá, Renan!\n\nSobre o projeto:\n- O que precisa ser feito:\n- Prazo desejado:\n- Referências (links):\n",
-)}`;
-
 export function Services() {
+  const { services, workflow, ui } = useContent();
+  const t = ui.services;
+  const budgetLink = `mailto:${person.email}?subject=${encodeURIComponent(t.budgetSubject)}&body=${encodeURIComponent(t.budgetBody)}`;
   const ref = useRef<HTMLOListElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start 85%", "end 60%"] });
   const line = useTransform(scrollYProgress, [0, 1], [0, 1]);
@@ -29,16 +29,8 @@ export function Services() {
   return (
     <section id="servicos" className="relative mx-auto max-w-7xl px-4 py-28 md:px-8 md:py-40">
       <div className="pointer-events-none absolute left-1/3 top-10 h-[500px] w-[700px] rounded-full bg-cyan/[0.07] blur-[160px]" aria-hidden />
-      <SectionHeader
-        index="04"
-        label="Para empresas & clientes"
-        title={
-          <>
-            Tem um projeto? <span className="text-gradient">Eu tiro do papel.</span>
-          </>
-        }
-      >
-        Do site que gera contatos ao sistema que organiza sua operação — com o mesmo padrão de qualidade que uso em produtos corporativos.
+      <SectionHeader index="04" label={t.label} title={<Rich text={t.title} />}>
+        {t.sub}
       </SectionHeader>
 
       <div className="grid gap-6 md:grid-cols-2">
@@ -56,12 +48,12 @@ export function Services() {
               <h3 className="mt-8 text-2xl font-semibold">{s.title}</h3>
               <p className="mt-3 leading-relaxed text-muted">{s.text}</p>
               <div className="mt-6 flex flex-wrap gap-2">
-                {s.tags.map((t) => (
-                  <Tag key={t}>{t}</Tag>
+                {s.tags.map((tag) => (
+                  <Tag key={tag}>{tag}</Tag>
                 ))}
               </div>
               <p className="mt-6 border-t border-line pt-4 font-mono text-[11px] uppercase tracking-wider text-slate-400">
-                Ex.: <span className="text-cyan">{s.example}</span>
+                {t.example} <span className="text-cyan">{s.example}</span>
               </p>
             </TiltCard>
           </Reveal>
@@ -69,7 +61,7 @@ export function Services() {
       </div>
 
       <Reveal className="mt-24">
-        <h3 className="mb-10 font-mono text-xs uppercase tracking-[0.3em] text-cyan">Como trabalho</h3>
+        <h3 className="mb-10 font-mono text-xs uppercase tracking-[0.3em] text-cyan">{t.howIWork}</h3>
       </Reveal>
       <ol ref={ref} className="relative grid gap-10 md:grid-cols-4 md:gap-6">
         <span className="absolute left-0 right-0 top-[7px] hidden h-px bg-line md:block" aria-hidden />
@@ -93,15 +85,15 @@ export function Services() {
 
       <Reveal className="mt-20 flex flex-col items-center gap-4 rounded-3xl border border-line bg-gradient-to-r from-cyan/10 via-violet/10 to-transparent p-8 text-center md:flex-row md:justify-between md:p-10 md:text-left">
         <div>
-          <p className="text-2xl font-semibold">Vamos conversar sobre o seu projeto?</p>
-          <p className="mt-1 text-muted">Conte o que você precisa — respondo com os próximos passos.</p>
+          <p className="text-2xl font-semibold">{t.ctaTitle}</p>
+          <p className="mt-1 text-muted">{t.ctaText}</p>
         </div>
         <Magnetic>
           <a
             href={budgetLink}
             className="group inline-flex shrink-0 items-center gap-2 rounded-full bg-white px-7 py-4 font-medium text-ink transition hover:bg-cyan"
           >
-            Solicitar orçamento <Arrow className="transition group-hover:rotate-45" />
+            {t.ctaButton} <Arrow className="transition group-hover:rotate-45" />
           </a>
         </Magnetic>
       </Reveal>

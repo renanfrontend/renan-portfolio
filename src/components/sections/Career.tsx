@@ -2,27 +2,32 @@
 
 import { AnimatePresence, motion } from "motion/react";
 import { useState, type KeyboardEvent } from "react";
-import { education, experience, type Level } from "@/content/data";
+import type { LevelKey, Role } from "@/content/types";
+import { useContent } from "@/i18n/provider";
 import { Reveal } from "../effects";
-import { SectionHeader, Tag } from "../ui";
+import { Rich, SectionHeader, Tag } from "../ui";
 
-const levels: Level[] = ["Analista", "Pleno", "Sênior"];
+const levels: LevelKey[] = ["analyst", "mid", "senior"];
 const stepHeight = ["md:h-40", "md:h-52", "md:h-64"];
 
 const startYear = (period: string) => Number(period.match(/\d{4}/)?.[0]);
 
 /** Um degrau por nível: ano de entrada e empresas, do mais antigo ao mais recente. */
-const ladder = levels.map((level) => {
-  const roles = experience.filter((r) => r.level === level);
-  return {
-    level,
-    since: Math.min(...roles.map((r) => startYear(r.period))),
-    companies: roles.map((r) => r.company.split(" — ")[0]).reverse(),
-    latestId: roles[0].id,
-  };
-});
+const buildLadder = (experience: Role[]) =>
+  levels.map((level) => {
+    const roles = experience.filter((r) => r.level === level);
+    return {
+      level,
+      since: Math.min(...roles.map((r) => startYear(r.period))),
+      companies: roles.map((r) => r.company.split(" — ")[0]).reverse(),
+      latestId: roles[0].id,
+    };
+  });
 
 export function Career() {
+  const { experience, education, ui } = useContent();
+  const t = ui.career;
+  const ladder = buildLadder(experience);
   const [activeId, setActiveId] = useState(experience[0].id);
   const active = experience.find((r) => r.id === activeId) ?? experience[0];
 
@@ -40,16 +45,8 @@ export function Career() {
     <section id="experiencia" className="relative mx-auto max-w-7xl px-4 py-28 md:px-8 md:py-40">
       <div className="pointer-events-none absolute -left-40 top-20 h-[500px] w-[500px] rounded-full bg-cyan/10 blur-[140px]" aria-hidden />
 
-      <SectionHeader
-        index="02"
-        label="Experiência"
-        title={
-          <>
-            De Analista a <span className="text-gradient">Sênior</span> em seis anos
-          </>
-        }
-      >
-        Uma trajetória de crescimento contínuo em produtos reais — saúde, telecom, indústria e logística.
+      <SectionHeader index="02" label={t.label} title={<Rich text={t.title} />}>
+        {t.sub}
       </SectionHeader>
 
       {/* Escada de carreira */}
@@ -72,12 +69,12 @@ export function Career() {
                     aria-hidden
                   />
                   <span className="flex items-center justify-between font-mono text-xs text-muted">
-                    <span>NÍVEL 0{i + 1}</span>
-                    <span className={current ? "text-cyan" : ""}>desde {step.since}</span>
+                    <span>{t.levelTag} 0{i + 1}</span>
+                    <span className={current ? "text-cyan" : ""}>{t.since} {step.since}</span>
                   </span>
                   <span className="mt-6 block">
                     <span className={`block text-3xl font-semibold tracking-tight md:text-4xl ${current ? "text-gradient" : "text-white"}`}>
-                      {step.level}
+                      {t.levels[step.level]}
                     </span>
                     <span className="mt-2 block text-sm text-muted">{step.companies.join(" · ")}</span>
                   </span>
@@ -93,7 +90,7 @@ export function Career() {
         <div className="grid overflow-hidden rounded-3xl border border-line bg-panel/70 backdrop-blur md:grid-cols-[300px_1fr]">
           <div
             role="tablist"
-            aria-label="Empresas"
+            aria-label={t.companies}
             aria-orientation="vertical"
             onKeyDown={onKeyDown}
             className="flex gap-2 overflow-x-auto border-b border-line p-3 md:flex-col md:gap-1 md:overflow-visible md:border-b-0 md:border-r"
@@ -140,7 +137,7 @@ export function Career() {
                 className="relative"
               >
                 <div className="flex flex-wrap items-center gap-3 font-mono text-xs">
-                  <span className="rounded-full bg-cyan/10 px-3 py-1 text-cyan">{active.level.toUpperCase()}</span>
+                  <span className="rounded-full bg-cyan/10 px-3 py-1 text-cyan">{t.levels[active.level].toUpperCase()}</span>
                   <span className="text-muted">{active.period}</span>
                   <span className="text-muted">· {active.place}</span>
                 </div>
@@ -176,7 +173,7 @@ export function Career() {
 
       {/* Formação */}
       <Reveal className="mt-20">
-        <h3 className="mb-6 font-mono text-xs uppercase tracking-[0.3em] text-cyan">Formação & certificações</h3>
+        <h3 className="mb-6 font-mono text-xs uppercase tracking-[0.3em] text-cyan">{t.education}</h3>
       </Reveal>
       <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {education.map((ed, i) => (
@@ -192,7 +189,7 @@ export function Career() {
         ))}
       </ul>
       <Reveal>
-        <p className="mt-6 font-mono text-xs text-muted">+70 certificações em Frontend, Cloud e IA</p>
+        <p className="mt-6 font-mono text-xs text-muted">{t.certifications}</p>
       </Reveal>
     </section>
   );
